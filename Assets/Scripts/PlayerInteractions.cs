@@ -1,24 +1,30 @@
 using UnityEngine;
+using TMPro;
 
 public class PlayerInteractions : MonoBehaviour
 {
     private PlayerMovement playerMovement; 
     private LayerMask layersToDetect;
-    private float rayDistance = 5f;
+    private TextMeshProUGUI interactionText;
+    private float rayDistance = 10f;
     private void Start()
     {
+        interactionText = GameObject.Find("Interaction Text").GetComponent<TextMeshProUGUI>();
         layersToDetect = LayerMask.GetMask("Default");
-        #region
         playerMovement = GetComponent<PlayerMovement>();
-        #endregion
+        interactionText.text = null;
     }
     void Update()
     {
-        Physics.Raycast(playerMovement.camTransform.position, playerMovement.camTransform.forward);
-        Debug.DrawRay(playerMovement.camTransform.position, playerMovement.camTransform.forward, Color.magenta);
         if (Physics.Raycast(playerMovement.camTransform.position, playerMovement.camTransform.forward, out RaycastHit hit, rayDistance, layersToDetect))
         {
-            Debug.Log($"RAYO TOCANDO: {hit.transform.gameObject.name}");
+            interactionText.text = hit.transform.gameObject.name;
+            Debug.DrawRay(playerMovement.camTransform.position, playerMovement.camTransform.forward, Color.green);
+        }
+        else
+        {
+            interactionText.text = null;
+            Debug.DrawRay(playerMovement.camTransform.position, playerMovement.camTransform.forward, Color.red);
         }
     }
 }
